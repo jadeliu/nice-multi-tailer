@@ -10,12 +10,13 @@ class LogParser:
             data['filepath'] = filepath
         except ValueError:
             data['line'] = s
+            print s
             print 'error decoding JSON'
             pass
-        if 'at' not in data:
-            print 'no at key in json'
-            data['at'] = datetime.datetime.now()
         LogParser.parse_at_time(data)
+        if 'at' not in data:
+            print 'no at key in json, using current timestamp instead'
+            data['at'] = datetime.datetime.now()
         return data
 
     @staticmethod
@@ -25,7 +26,8 @@ class LogParser:
             print 'no input'
             return
         try:
-            data_dic['at'] = datetime.datetime.strptime(data_dic['at'], '%a %b %d %H:%M:%S %Z %Y')
+            if 'at' in data_dic:
+                data_dic['at'] = datetime.datetime.strptime(data_dic['at'], '%a %b %d %H:%M:%S %Z %Y')
         except ValueError:
             print 'error in parsing at time'
             pass

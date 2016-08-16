@@ -8,6 +8,6 @@ To run:
 4. run program:
     python run.py -D [directory] -T [maxwait] -B
     for testing, please use "./sample_logs/" as directory argument
-5. generate logs:
+5. generate logs for testing:
     pyhton gen_log.py
 

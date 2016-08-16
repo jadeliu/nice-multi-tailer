@@ -1,6 +1,7 @@
 from random import randrange, randint, choice
 from datetime import timedelta, datetime
 import os, time
+import simplejson as json
 
 class LogGenerator:
     def random_date(self):
@@ -25,7 +26,7 @@ class LogGenerator:
                 value1 = value + '.1'
                 value = {key1:value1}
             data['content'].update({key:value})
-        return data
+        return json.dumps(data)
 
     def gen_invalid_log(self):
 

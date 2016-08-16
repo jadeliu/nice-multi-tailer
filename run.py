@@ -8,9 +8,7 @@ import signal
 from circular_buffer import *
 from log_parser import LogParser
 
-def signal_handler(signal, frame):
-    print('You pressed Ctrl+C! Exit the program')
-    sys.exit(0)
+
 
 def read_log_and_write_2_buffer(cb, files, lock):
     mt = multi_tailer.MultiTail(files, skip_to_end=False)
@@ -21,16 +19,14 @@ def read_log_and_write_2_buffer(cb, files, lock):
             lock.acquire()
             for record in reads:
                 filepath = record[0][0]
-                line = record[0][1]
+                line = record[1]
                 data = LogParser.parse(line, filepath)
                 cb.append(Node(data))
             lock.release()
 
 def time_monitor(cb, maxwait):
-    next_call = time.time()
-    while True:
-        emit_logs(cb)
-        time.sleep(maxwait)
+    emit_logs(cb)
+    threading.Timer(maxwait, time_monitor(cb, maxwait)).start()
 
 def emit_logs(cb):
     # function to emit everything in the circular buffer
@@ -52,15 +48,17 @@ def main():
     cb = CircularBuffer(args.T)
 
     # threads to continuously read from files with multi tailer
+    # for faireness only read one line from each file
     files = [args.D+k for k in os.listdir(args.D)]
-    for i in range(4):
-        t = threading.Thread(name='read-and-write-2-buffer', target=read_log_and_write_2_buffer(cb,files, lock))
-        t.daemon = True
-        t.start()
+    t = threading.Thread(name='read-and-write-2-buffer', target=read_log_and_write_2_buffer(cb,files, lock))
 
-    # timer thread to trigger emit when maxwait has reached
-    timerThread = threading.Thread(target=time_monitor(cb, args.T))
-    timerThread.start()
+    # start timer thread to trigger emit when maxwait has reached
+    time_monitor(cb, args.T)
+
+    def signal_handler(signal, frame):
+        print('You pressed Ctrl+C! Emit all records and exit the program')
+        emit_logs(cb)
+        sys.exit(0)
 
     signal.signal(signal.SIGINT, signal_handler)
     print('Press Ctrl+C')
