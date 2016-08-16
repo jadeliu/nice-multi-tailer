@@ -1,4 +1,9 @@
-#
-# log validation: if no 'at' timestamp, use the arrival time instead
+# Assumptions:
+1.log validation: if no 'at' timestamp, use the arrival time instead
 
-# timezone in timestamp: assuming all from PDT, can be solved using pytz
+2.timezone in timestamp: python strptime did not parse 'PDT', for simplicity, I'm assuming all records are from the same timezone
+
+#Queue and Scheduling:
+1. a thread safe fixed size priority queue is used; the queue is sorted by 'at' stamp
+2. for fairness, only one line is read from each file
+
