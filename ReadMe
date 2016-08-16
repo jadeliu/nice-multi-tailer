@@ -7,7 +7,8 @@ To run:
     pip install -r requirements.txt
 4. run program:
     python run.py -D [directory] -T [maxwait] -B
-    for testing, please use "./sample_logs/" as directory argument
+    for testing, please use "./sample_logs/" as directory argument. The command for using maxwait of 100ms is:
+    python run.py -D ./sample_logs/ -T 100 -B
 5. generate logs for testing:
     pyhton gen_log.py
 
