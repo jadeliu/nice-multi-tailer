@@ -2,7 +2,7 @@ import datetime
 import simplejson as json
 
 class LogParser:
-
+    @classmethod
     def parse(self, s, filepath):
         data = {}
         try:

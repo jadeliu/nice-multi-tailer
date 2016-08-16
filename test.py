@@ -29,18 +29,20 @@ class MultiReadTest(unittest.TestCase):
         with tempfile.NamedTemporaryFile() as temp2:
             mt = multi_tailer.MultiTail([temp.name,temp2.name])
             self.assertEqual([], list(mt.poll()))
-            idx = 0
-            while True:
-                temp.write('Some data' +str(idx)+ os.linesep)
-                temp.flush()
-                temp2.write('Some data2' + str(idx)+os.linesep)
-                temp2.flush()
-                time.sleep(10)
-                idx+=1
+
+            temp.write('Some data' + os.linesep)
+            temp.flush()
+            temp2.write('Some data2' +os.linesep)
+            temp2.flush()
+            time.sleep(10)
+
             #actual = set(mt.poll())
             #expected = {((temp.name, 0), 'Some data'),((temp2.name, 0), 'Some data2')}
             #self.assertEqual(actual, expected)
-            print mt.poll()
+            lis = list(mt.poll())
+            for item in lis:
+                print item[0][0]
+                print item[1]
 
 class TailedFileTest(unittest.TestCase):
 

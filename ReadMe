@@ -1,0 +1,7 @@
+To run:
+1. install virtualenv:
+    pip install virtualenv
+2. source virtualenv:
+    source venv/bin/activate
+3.
+
