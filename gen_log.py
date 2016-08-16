@@ -1,5 +1,6 @@
-from random import randrange, randint
+from random import randrange, randint, choice
 from datetime import timedelta, datetime
+import os, time
 
 class LogGenerator:
     def random_date(self):
@@ -28,7 +29,7 @@ class LogGenerator:
 
     def gen_invalid_log(self):
 
-        with open('./sample_logs/invalid_templates') as f:
+        with open('./invalid_templates') as f:
             lines = f.readlines()
             line = lines[randint(0, len(lines)-1)]
 
@@ -50,6 +51,21 @@ class LogGenerator:
                 return line[:start]+ti_str+line[end:]
             return line
 
-l = LogGenerator()
-print l.gen_invalid_log()
-print l.gen_valid_log()
+def write_to_file(filename, line):
+    with open(filename, 'a') as f:
+        print line
+        f.write(str(line))
+        f.flush()
+        f.close()
+
+if __name__=="__main__":
+    l = LogGenerator()
+    while True:
+        file_paths = ['sample_logs/' + k for k in os.listdir('sample_logs')]
+        l1 = l.gen_invalid_log()
+        l2 = l.gen_valid_log()
+        l3 = l.gen_valid_log()
+        write_to_file(choice(file_paths), l1)
+        write_to_file(choice(file_paths), l2)
+        write_to_file(choice(file_paths), l3)
+        time.sleep(10)

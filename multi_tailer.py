@@ -125,6 +125,7 @@ class MultiTail:
     def __init__(self, globspec, interval=1.0, skip_to_end=True, offsets=None):
         """`globspec` is a path pattern like '/var/log/*.log' suitable for passing to the glob module, and `interval` is a float specifying how many seconds to sleep between checks for new files and new content. If `skip_to_end` is False (default True) all existing lines will be reported as new content immediately."""
         self._globspec = [globspec] if type(globspec) == type('') else globspec
+
         #self._globspec = os.listdir(directory)
         self._interval = interval
         self._last_scan = 0
@@ -140,12 +141,16 @@ class MultiTail:
         """Check for new files, deleted files, and rotated files."""
         # Get listing of matching files.
         paths = []
+        paths = self._globspec
+        '''
         for single_glob in self._globspec:
             paths.extend(glob.glob(single_glob))
         print 'scanning paths'
         print paths
+        '''
         # Remove files that don't appear in the new list.
         for path in self._tailedfiles.keys():
+            print path
             if path not in paths:
                 del self._tailedfiles[path]
 

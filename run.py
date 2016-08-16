@@ -2,31 +2,35 @@ from argparse import ArgumentParser
 import os, sys
 import threading
 import multi_tailer
-import output_print
+from output_print import OutputPrinter
 import time
 import signal
-
-class TimerThread(threading.Thread):
-    def __init__(self):
-        self.stopped = False
-        threading.Thread.__init__(self)
-
-    def run(self, wait_time, func, *args):
-        while not self.stopped:
-            func(args)
-            time.sleep(wait_time)
-
+from circular_buffer import *
+from log_parser import LogParser
 
 def signal_handler(signal, frame):
     print('You pressed Ctrl+C! Exit the program')
     sys.exit(0)
 
-def read_log_and_write_2_buffer(directory):
+def read_log_and_write_2_buffer(cb, files, lock):
+    mt = multi_tailer.MultiTail(files, skip_to_end=False)
     while True:
-        pass
+        reads = list(mt.poll(files))
+        print reads
+        '''
+        if reads:
+            lock.acquire()
+            for line in reads:
+        '''
 
-def emit_log():
-    pass
+def emit_logs(cb):
+    # function to emit everything in the circular buffer
+    while not cb.data.empty():
+        item = cb.data.get()
+        if OutputPrinter.is_valid(item):
+            OutputPrinter.print_valid_line(item)
+        else:
+            OutputPrinter.print_invalid_line(item)
 
 def main():
     parser = ArgumentParser(description="usage: %prog [arguments]")
@@ -34,16 +38,15 @@ def main():
     parser.add_argument('-T', metavar='maxwait',type = int, default=1000, help='value in milliseconds to delay processing events')
     parser.add_argument('-B',action='store_true')
     args = parser.parse_args()
-    print "parser"
-    print args
+
     lock = threading.Lock()
+    cb = CircularBuffer(args.T)
 
-    mt = multi_tailer.MultiTail(os.listdir(args.D), skip_to_end=False)
-    while (1):
-        list(mt.poll())
+    # thread to continuously read from files with multi tailer
+    files = [args.D+k for k in os.listdir(args.D)]
+    t1 = threading.Thread(name='read-and-write-2-buffer', target=read_log_and_write_2_buffer(cb,files, lock))
 
-
-    # thread to read from files with multi tailer
+    # timer thread to trigger emit
     #t2 = TimerThread()
     #t2.start()
 

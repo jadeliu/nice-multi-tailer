@@ -36,6 +36,7 @@ class MultiReadTest(unittest.TestCase):
                 temp2.write('Some data2' + str(idx)+os.linesep)
                 temp2.flush()
                 time.sleep(10)
+                idx+=1
             #actual = set(mt.poll())
             #expected = {((temp.name, 0), 'Some data'),((temp2.name, 0), 'Some data2')}
             #self.assertEqual(actual, expected)
@@ -88,6 +89,9 @@ class TailedFileTest(unittest.TestCase):
              for line, _ in f.readlines():
                  self.assertEqual('d' * 200, line)
                  return
+
+class CircularBufferTest:
+    pass
 
 if __name__ == '__main__':
    unittest.main()

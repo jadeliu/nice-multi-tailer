@@ -4,6 +4,7 @@ import simplejson as json
 class LogParser:
 
     def parse(self, s, filepath):
+        data = {}
         try:
             data = json.loads(s)
             data['filepath'] = filepath

@@ -1,6 +1,6 @@
 import Queue as q
 import log_parser
-import output_print
+from output_print import OutputPrinter
 
 class Node:
     def __init__(self, dict_data):
@@ -11,10 +11,9 @@ class Node:
 
 class CircularBuffer:
     """ class that implements a not-yet-full buffer """
-    def __init__(self,size_max):
+    def __init__(self,size_max=20000):
         self.max = size_max
         self.data = q.PriorityQueue()
-        self.printer = output_print.OutputPrinter()
 
     class _full:
         """ class that implements a full buffer """
@@ -23,10 +22,10 @@ class CircularBuffer:
             self.data.put(x)
             #self.cur = (self.cur+1) % self.max
             item = self.data.get()
-            if self.printer.is_valid(item):
-                self.printer.print_valid_line(item)
+            if OutputPrinter.is_valid(item):
+                OutputPrinter.print_valid_line(item)
             else:
-                self.printer.print_invalid_line(item)
+                OutputPrinter.print_invalid_line(item)
             self.cur = (self.cur+1) % self.max
         def get(self):
             """ return list of elements in correct order """
@@ -39,12 +38,7 @@ class CircularBuffer:
         #printer = output_print.OutputPrinter()
         if self.data.qsize() == self.max:
             #item = self.data.get()
-            '''
-            if printer.is_valid(item):
-                printer.print_valid_line(item)
-            else:
-                printer.print_invalid_line(item)
-            '''
+
             self.cur = 0
             # Permanently change self's class from non-full to full
             self.__class__ = self._full
@@ -53,6 +47,7 @@ class CircularBuffer:
         """ Return a list of elements from the oldest to the newest. """
         return self.data
 
+'''
 import log_parser
 f = open('./sample_logs/sample')
 lines = f.readlines()
@@ -65,3 +60,4 @@ for node in lis:
     cb.append(node)
     print cb.__class__
     print cb.data
+'''
