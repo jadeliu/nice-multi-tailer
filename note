@@ -1,0 +1,4 @@
+#
+# log validation: if no 'at' timestamp, use the arrival time instead
+
+# timezone in timestamp: assuming all from PDT, can be solved using pytz

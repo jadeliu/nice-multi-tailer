@@ -3,6 +3,8 @@ import tempfile
 import multi_tailer
 import sys
 import os
+import time
+import circular_buffer
 
 sys.path.insert(0, '.')
 
@@ -27,13 +29,17 @@ class MultiReadTest(unittest.TestCase):
         with tempfile.NamedTemporaryFile() as temp2:
             mt = multi_tailer.MultiTail([temp.name,temp2.name])
             self.assertEqual([], list(mt.poll()))
-            temp.write('Some data' + os.linesep)
-            temp.flush()
-            temp2.write('Some data2' + os.linesep)
-            temp2.flush()
-            actual = set(mt.poll())
-            expected = {((temp.name, 0), 'Some data'),((temp2.name, 0), 'Some data2')}
-            self.assertEqual(actual, expected)
+            idx = 0
+            while True:
+                temp.write('Some data' +str(idx)+ os.linesep)
+                temp.flush()
+                temp2.write('Some data2' + str(idx)+os.linesep)
+                temp2.flush()
+                time.sleep(10)
+            #actual = set(mt.poll())
+            #expected = {((temp.name, 0), 'Some data'),((temp2.name, 0), 'Some data2')}
+            #self.assertEqual(actual, expected)
+            print mt.poll()
 
 class TailedFileTest(unittest.TestCase):
 

@@ -1,9 +1,10 @@
 from argparse import ArgumentParser
-import sys
+import os, sys
 import threading
 import multi_tailer
 import output_print
 import time
+import signal
 
 class TimerThread(threading.Thread):
     def __init__(self):
@@ -15,8 +16,14 @@ class TimerThread(threading.Thread):
             func(args)
             time.sleep(wait_time)
 
-def write_2_buffer(directory):
-    pass
+
+def signal_handler(signal, frame):
+    print('You pressed Ctrl+C! Exit the program')
+    sys.exit(0)
+
+def read_log_and_write_2_buffer(directory):
+    while True:
+        pass
 
 def emit_log():
     pass
@@ -31,8 +38,9 @@ def main():
     print args
     lock = threading.Lock()
 
-    mt = multi_tailer.MultiTail(args.D, skip_to_end=False)
-    print list(mt.poll())
+    mt = multi_tailer.MultiTail(os.listdir(args.D), skip_to_end=False)
+    while (1):
+        list(mt.poll())
 
 
     # thread to read from files with multi tailer
@@ -45,7 +53,9 @@ def main():
     # output thread to monitor queue, sort and emit
     #t3 = threading.Thread(name='non-daemon', target=non_daemon)
 
-
+    signal.signal(signal.SIGINT, signal_handler)
+    print('Press Ctrl+C')
+    signal.pause()
 
 if __name__=="__main__":
     main()

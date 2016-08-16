@@ -1,4 +1,4 @@
-import queue as q
+import Queue as q
 import log_parser
 import output_print
 
@@ -14,12 +14,19 @@ class CircularBuffer:
     def __init__(self,size_max):
         self.max = size_max
         self.data = q.PriorityQueue()
+        self.printer = output_print.OutputPrinter()
 
     class _full:
         """ class that implements a full buffer """
         def append(self, x):
             """ Append an element overwriting the oldest one. """
             self.data.put(x)
+            #self.cur = (self.cur+1) % self.max
+            item = self.data.get()
+            if self.printer.is_valid(item):
+                self.printer.print_valid_line(item)
+            else:
+                self.printer.print_invalid_line(item)
             self.cur = (self.cur+1) % self.max
         def get(self):
             """ return list of elements in correct order """
@@ -28,13 +35,16 @@ class CircularBuffer:
     def append(self,x):
         """append an element at the end of the buffer"""
         self.data.put(x)
-        printer = output_print.OutputPrinter()
+
+        #printer = output_print.OutputPrinter()
         if self.data.qsize() == self.max:
-            item = self.data.get()
+            #item = self.data.get()
+            '''
             if printer.is_valid(item):
                 printer.print_valid_line(item)
             else:
                 printer.print_invalid_line(item)
+            '''
             self.cur = 0
             # Permanently change self's class from non-full to full
             self.__class__ = self._full
