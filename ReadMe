@@ -6,5 +6,8 @@ To run:
 3. install packages:
     pip install -r requirements.txt
 4. run program:
-    python run.py -D [directory] -T [maxwait] -B 
+    python run.py -D [directory] -T [maxwait] -B
+    for testing, please use "./sample_logs/" as directory argument
+5. generate logs:
+    pyhton gen_log.py
 
