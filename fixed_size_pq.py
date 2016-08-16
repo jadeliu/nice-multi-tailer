@@ -7,7 +7,7 @@ class Node:
         self.dic_data = dict_data
 
     def __cmp__(self, other):
-        return cmp(self.data['at'], other.data['at'])
+        return cmp(self.dic_data['at'], other.dic_data['at'])
 
 class FixedSizePQ:
     """ class that implements a not-yet-full buffer """
@@ -21,7 +21,7 @@ class FixedSizePQ:
             """ Append an element overwriting the oldest one. """
             self.data.put(x)
             #self.cur = (self.cur+1) % self.max
-            item = self.data.get().dict_data
+            item = self.data.get().dic_data
             if OutputPrinter.is_valid(item):
                 OutputPrinter.print_valid_line(item)
             else:
