@@ -64,17 +64,3 @@ class FixedSizePQ:
         """ Return a list of elements from the oldest to the newest. """
         return self.data
 
-'''
-import log_parser
-f = open('./sample_logs/sample')
-lines = f.readlines()
-parser = log_parser.LogParser()
-path = 'sample_logs/sample'
-lis = [parser.parse(line, path) for line in lines]
-cb = FixedSizePQ(2)
-lis_nodes = [Node(k) for k in lis]
-for node in lis:
-    cb.append(node)
-    print cb.__class__
-    print cb.data
-'''
