@@ -4,12 +4,12 @@ from output_print import OutputPrinter
 
 class Node:
     def __init__(self, dict_data):
-        self.data = dict_data
+        self.dic_data = dict_data
 
     def __cmp__(self, other):
         return cmp(self.data['at'], other.data['at'])
 
-class CircularBuffer:
+class FixedSizePQ:
     """ class that implements a not-yet-full buffer """
     def __init__(self,size_max=20000):
         self.max = size_max
@@ -21,7 +21,7 @@ class CircularBuffer:
             """ Append an element overwriting the oldest one. """
             self.data.put(x)
             #self.cur = (self.cur+1) % self.max
-            item = self.data.get()
+            item = self.data.get().dict_data
             if OutputPrinter.is_valid(item):
                 OutputPrinter.print_valid_line(item)
             else:

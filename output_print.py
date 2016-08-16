@@ -18,6 +18,7 @@ class OutputPrinter:
 
     @classmethod
     def is_valid(self, data_dic):
+        print data_dic
         if data_dic:
             if ("content" in data_dic) and ("at" in data_dic) and ("note" in data_dic):
                 return True

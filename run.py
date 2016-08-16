@@ -5,7 +5,7 @@ import multi_tailer
 from output_print import OutputPrinter
 import time, datetime
 import signal
-from circular_buffer import *
+from fixed_size_pq import *
 from log_parser import LogParser
 
 
@@ -45,7 +45,7 @@ def main():
     args = parser.parse_args()
 
     lock = threading.Lock()
-    cb = CircularBuffer(args.T)
+    cb = FixedSizePQ(args.T)
 
     # threads to continuously read from files with multi tailer
     # for faireness only read one line from each file

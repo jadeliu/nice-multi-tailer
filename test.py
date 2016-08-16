@@ -4,7 +4,7 @@ import multi_tailer
 import sys
 import os
 import time
-import circular_buffer
+import fixed_size_pq
 
 sys.path.insert(0, '.')
 
