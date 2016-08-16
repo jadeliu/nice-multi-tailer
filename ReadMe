@@ -3,5 +3,8 @@ To run:
     pip install virtualenv
 2. source virtualenv:
     source venv/bin/activate
-3.
+3. install packages:
+    pip install -r requirements.txt
+4. run program:
+    python run.py -D [directory] -T [maxwait] -B 
 
