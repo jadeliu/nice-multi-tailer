@@ -2,8 +2,8 @@ import datetime
 import simplejson as json
 
 class LogParser:
-    @classmethod
-    def parse(self, s, filepath):
+    @staticmethod
+    def parse(s, filepath):
         data = {}
         try:
             data = json.loads(s)
@@ -15,11 +15,12 @@ class LogParser:
         if 'at' not in data:
             print 'no at key in json'
             data['at'] = datetime.datetime.now()
-        self.parse_at_time(data)
+        LogParser.parse_at_time(data)
         return data
 
+    @staticmethod
     # function to parse at time in data
-    def parse_at_time(self, data_dic):
+    def parse_at_time(data_dic):
         if not data_dic:
             print 'no input'
             return

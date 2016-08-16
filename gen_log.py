@@ -17,7 +17,7 @@ class LogGenerator:
         ti_str = datetime.strftime(ti, '%a %b %d %H:%M:%S %Y')
 
         data['at'] = ti_str[:-4] + "PDT "+ti_str[-4:]
-        for i in range(randint(1, 5)):
+        for i in range(1, randint(1, 5)):
             key = "key"+str(i)
             value = "value"+str(i)
             if randint(0,1):
@@ -37,11 +37,11 @@ class LogGenerator:
             if "at" in line:
                 idx = line.find('"at"')
                 idx = idx + 4
-                start = 0
+                start = idx
                 while line[idx]!='"':
                     idx +=1
-                start = idx
                 idx += 1
+                start = idx
                 while line[idx]!='"':
                     idx += 1
                 end = idx
@@ -54,7 +54,7 @@ class LogGenerator:
 def write_to_file(filename, line):
     with open(filename, 'a') as f:
         print line
-        f.write(str(line))
+        f.write(str(line)+ os.linesep)
         f.flush()
         f.close()
 
@@ -63,9 +63,9 @@ if __name__=="__main__":
     while True:
         file_paths = ['sample_logs/' + k for k in os.listdir('sample_logs')]
         l1 = l.gen_invalid_log()
-        l2 = l.gen_valid_log()
-        l3 = l.gen_valid_log()
         write_to_file(choice(file_paths), l1)
+        l2 = l.gen_valid_log()
         write_to_file(choice(file_paths), l2)
+        l3 = l.gen_valid_log()
         write_to_file(choice(file_paths), l3)
-        time.sleep(10)
+        #time.sleep(10)
